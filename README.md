@@ -1,98 +1,153 @@
-steps for project data mining 
+# 🧠 Data Mining Project – Steps Overview
 
+---
 
-1- import library pandas, matpotlib, numpy, seaborn, linearRegression,
-train_test_split, mean_squared_error, r2_score, make_pipeline, ColumnTransformer, oneHotEncoder, DecisionTreeRegressor, HumanName
+## 1️⃣ Import Libraries
 
-2- display data with read_csv
+```python
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt  
+import seaborn as sns  
+from sklearn.linear_model import LinearRegression  
+from sklearn.model_selection import train_test_split  
+from sklearn.metrics import mean_squared_error, r2_score  
+from sklearn.pipeline import make_pipeline  
+from sklearn.compose import ColumnTransformer  
+from sklearn.preprocessing import OneHotEncoder  
+from sklearn.tree import DecisionTreeRegressor  
+from nameparser import HumanName
+```
 
-3- clean data : Ensure that there are no missing or duplicate or negative  values with duplicated() and isnull() function
+---
 
-4- make gender attribute : define a list of name to predict gender
-and loop over each name and predict the gender with function HumanName
-and add gender column, then convert gender column to numerical values
+## 2️⃣ Load & Display the Dataset
 
-5-important information for analysis : ex : head(), describe(), info()
+📂 Load the dataset using:
 
-6- analysis of data : 
-a-calculate mean of basebay  
-b-max of overtimepay
-c-person who take the most overtimepay
-d-persons who take most overtime pay
-e-Job title for one of the most employees that take overtime pays
-f-Total Pay Benefits for one of the most employees that take overtime pays
-g-Person who take the most Total Pay Benefits, Person who take the lowest Total Pay Benefits
-h-The mean of each pay per year
-i-Number of jobs with nunique()
-j-Person who take the most other pay
-k-The largest ten jobs in base pay(using groupby the median of basebay in jobtitle and take the most 10 with nlargest(10), then create a horizontal bar chart)
-l-The smallest ten jobs in base pay(using groupby the median of basebay in jobtitle and take the most 10 with nsmallest(10))
-m-The largest ten jobs in overtime Pay(using groupby the median of otherpay in jobtitle and take the most 10 with nlargest(10))
-n-The largest ten jobs in Benefits(using groupby the median of benefit in jobtitle and take the most 10 with nlargest(10))
-o-The largest ten jobs in total Pay(using groupby the median of total pay in jobtitle and take the most 10 with nlargest(10))
-p-The largest ten jobs in total Pay benefits(using groupby the median of pay benefits in jobtitle and take the most 10 with nlargest(10))
-q-The most ten jobs which have emolyees with value_counts()
-r-Counting how many times that word 'officer' is in (job title) with 
-function officeWordCount consist of if condition the jobtitle contains office return true else return false and sum all true condition to calculate the number of job that contains 'officer' word
+```python
+df = pd.read_csv("your_dataset.csv")
+df.head()
+```
 
+---
 
+## 3️⃣ Clean the Data 🧼
 
-7- visualization :
-a- count number of crimes per category, create a pie
-chart of the crime counts and create a scatterplot , creat a scatterplot for overtime pay with jobtitle
-b- Showing that total pays values are very close in all years using FacetGrid
-c- heat map for data with method heatmap()
-d- most popular 30 jobs and their distrbutions with barplot 
-e- Comparison Between all jobs in (Fire Dapartment ) ---> BasePay
-using bar() fire department cotains {'Chief, Fire Department','Asst Chf of Dept (Fire Dept)','Firefighter'}
-f- BasePay based on years (Firefighter Job)  : filter data where jobtitle = firefighter and count the employee name of filter and add column experiences = number of replicate the employee name and sort them 
+- Check for duplicates: `df.duplicated().sum()`
+- Remove duplicates: `df = df.drop_duplicates()`
+- Check for missing values: `df.isnull().sum()`
+- Remove negative values if not logical.
 
+---
 
-8- Models For Predicted (linear regression) : 
-a- corr() used to calculate the correlation between columns in a pandas DataFrame
-b- Select the columns to use for the model is jobtitle and gender
-c- Encode the JobTitle column using one-hot encoding\
-d- Split the dataset into training and testing subsets
-e- Create the linear regression model and fit it to the training data
-f- Make predictions on the testing data using model.predict()
-g- Evaluate the performance of the model using R-squared
-h- Adding a diagonal line for reference
-i- show the plot
+## 4️⃣ Add Gender Attribute 🚻
 
-9- Models For Predicted (tree decision)
-a- Select input and target variables
-b- Encode the JobTitle column using one-hot encoding
-c- Split data into training and testing sets
-d- Create decision tree regression model
-e- Train the model on the training data
-f- Make predictions on the testing data
-g- Evaluate model performance using R-squared
-h- Adding a diagonal line for reference
-i- Show the plot
+- Use `HumanName` to extract first names.
+- Predict gender based on names (using a name list or a gender prediction library).
+- Convert gender to numeric (e.g., Male = 1, Female = 0).
 
+```python
+from nameparser import HumanName
 
-10- filter jobtitle == asst chf of dep and count the employee name of filter and add column experiences = number of replicate the employee name and sort them 
+def predict_gender(name):
+    # Your prediction logic here
+    return "Male" or "Female"
 
+df['Gender'] = df['EmployeeName'].apply(lambda name: predict_gender(HumanName(name).first))
+df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 0})
+```
 
+---
 
-11- Models For Predicted (linear regression) : 
-a- corr() used to calculate the correlation between columns in a pandas DataFrame
-b- Select the columns to use for the model is jobtitle and gender
-c- Encode the JobTitle column using one-hot encoding\
-d- Split the dataset into training and testing subsets
-e- Create the linear regression model and fit it to the training data
-f- Make predictions on the testing data using model.predict()
-g- Evaluate the performance of the model using R-squared
-h- Adding a diagonal line for reference
-i- show the plot
+## 5️⃣ Quick Data Summary 🧾
 
-12- Models For Predicted (tree decision)
-a- Select input and target variables
-b- Encode the JobTitle column using one-hot encoding
-c- Split data into training and testing sets
-d- Create decision tree regression model
-e- Train the model on the training data
-f- Make predictions on the testing data
-g- Evaluate model performance using R-squared
-h- Adding a diagonal line for reference
-i- Show the plot
+Use:
+
+```python
+df.head()
+df.describe()
+df.info()
+```
+
+---
+
+## 6️⃣ Data Analysis 🧮
+
+- 📊 `BasePay` Mean: `df['BasePay'].mean()`
+- 💰 Max `OvertimePay`: `df['OvertimePay'].max()`
+- 👤 Employee with most `OvertimePay`
+- 👥 Employees with highest `OvertimePay`
+- 📌 Job title for top overtime employees
+- 💸 `TotalPayBenefits` top values
+- 🧍‍♂️ Person with most/least `TotalPayBenefits`
+- 📆 Average pay per year
+- 🧾 Number of job titles: `df['JobTitle'].nunique()`
+- 🧍 Person with most `OtherPay`
+- 📈 Top 10 jobs by median `BasePay`:
+  ```python
+  df.groupby('JobTitle')['BasePay'].median().nlargest(10).plot(kind='barh')
+  ```
+- 📉 Bottom 10 jobs by median `BasePay`
+- 💲 Top 10 jobs by `OvertimePay`
+- 💼 Top 10 jobs by `Benefits`
+- 💰 Top 10 jobs by `TotalPay`
+- 🏆 Top 10 by `TotalPayBenefits`
+- 🔟 Most common jobs: `df['JobTitle'].value_counts().head(10)`
+- 👮 Count of jobs with 'officer':
+  ```python
+  def officerWordCount(title):
+      return 'officer' in title.lower()
+  officer_count = df['JobTitle'].apply(officerWordCount).sum()
+  ```
+
+---
+
+## 7️⃣ Visualization 📊
+
+- 🍕 Pie chart of crime counts
+- 🔵 Scatterplot: `OvertimePay` vs. `JobTitle`
+- 🧱 `FacetGrid` for year-wise `TotalPay`
+- 🔥 Heatmap of correlation:
+  ```python
+  sns.heatmap(df.corr(), annot=True)
+  ```
+- 📊 Barplot for top 30 jobs
+- 🚒 Compare `BasePay` in Fire Department jobs:
+  ```python
+  fire_jobs = ['Chief, Fire Department','Asst Chf of Dept (Fire Dept)','Firefighter']
+  df[df['JobTitle'].isin(fire_jobs)].groupby('JobTitle')['BasePay'].mean().plot(kind='bar')
+  ```
+- 🔥 Experience of Firefighters by counting occurrences of names
+
+---
+
+## 8️⃣ Linear Regression Model 📈
+
+- 📊 `df.corr()` to check correlations
+- 🎯 Target: `TotalPay`, Features: `JobTitle`, `Gender`
+- 🔠 One-hot encode `JobTitle`
+- ✂️ Split data: `train_test_split()`
+- 🤖 Create & train model: `LinearRegression()`
+- 📈 Predict and evaluate with `r2_score`
+- 📏 Add diagonal reference line in the plot
+
+---
+
+## 9️⃣ Decision Tree Regression 🌳
+
+- 🎯 Target: `TotalPay`, Features: `JobTitle`, `Gender`
+- 🔠 Encode `JobTitle`
+- ✂️ Split data
+- 🌲 Train using `DecisionTreeRegressor()`
+- 📈 Predict and evaluate with `r2_score`
+- 📏 Diagonal line for reference in visualization
+
+---
+
+## 🔟 Assistant Chief of Department Analysis 🔍
+
+- Filter: `df[df['JobTitle'] == "Asst Chf of Dept (Fire Dept)"]`
+- Count employee names
+- Add column: `experience = df.groupby('EmployeeName').transform('count')`
+- Sort by experience
